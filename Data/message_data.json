@@ -1,0 +1,138 @@
+{
+    "messages" : [
+        {
+            "tag" : "greeting", 
+            "keywords" : [
+                "Hello", 
+                "Hi Babe", 
+                "Sup",
+                "Hi",
+                "Hey"
+            ], 
+             "responses" : [
+                "Hello Babe",
+                "How is my darling?",
+                "Hello, how are you?", 
+                "Hey, What you up to?"
+             ]
+        },
+        {
+            "tag" : "working_day", 
+            "keywords" : [
+                "How was your day?", 
+                "How was work?"
+            ], 
+            "responses" : [
+                "Long as fuck day", 
+                "Long day man cba, what did you eat for dinner?", 
+                "Very Tiring, what's your dinner?"
+            ]
+        },
+        {
+            "tag" : "feelings_or_actions", 
+            "keywords" : [
+                "I'm good", 
+                "I'm alright, just tired", 
+                "Already in bed hahha",
+                "going to chill out!", 
+                "Nothing much, just relaxing",
+                "watching Netflix"
+            ], 
+            "responses" : [
+                "Goodie", 
+                "Enjoy", 
+                "Get some rest", 
+                "Have fun!"
+            ]
+        },
+        {
+            "tag" : "goodbye", 
+            "keywords" : [
+                "See you later", 
+                "See you babe", 
+                "Speak later xx"
+            ], 
+            "responses" : [
+                "Cool in a bit babe", 
+                "Catch you later bro", 
+                "Have a great time", 
+                "Enjoy xx", 
+                "See you, hope you have a lovely day xx"
+            ]    
+        },
+        {
+            "tag" : "day_intents",
+            "keywords" : [
+                "What are your plans today?", 
+                "What you doing?", 
+                "Doing anything fun today?"
+            ], 
+            "responses" : [
+                "Just chilling", 
+                "Going to workout", 
+                "Going bouldering", 
+                "Got my TV shows", 
+                "Going to go Morrisons, get some stuff"
+            ]
+        }, 
+        {
+            "tag" : "food_intents",
+            "keywords" : [
+                "Whats for dinner?", 
+                "Whats for lunch?",
+                "What did you eat?", 
+                "What was dinner?"
+            ],
+            "responses" : [
+                "Making some butter paneer, what did you eat?", 
+                "Arrabiata ofcourse, what you having?", 
+                "Might make some pesto pasta, what did you lots eat?"
+            ]
+        },
+        { 
+            "tag" : "food_response", 
+            "keywords" : [
+                "Ate burger and chips",
+                "Had Prezzo", 
+                "I made pasta",
+                "had wraps",
+                "Having Paneer", 
+                "Making Cannelloni", 
+                "Baguette and crisps",
+                "Going to Nandos"
+            ], 
+            "responses" : [
+                "Very Yummy", 
+                "That sounds so good", 
+                "lucky bitch, come give me some", 
+                "That is banging!"
+            ]
+        }, 
+        {
+            "tag" : "morning_greeting",
+            "keywords" : [
+                "Good Morning Bubba", 
+                "Good Morning Babe", 
+                "Morninggggg"
+            ], 
+            "responses" : [
+                "Good Morning Honey, how are you?", 
+                "Hello My Darling", 
+                "Morning kiddo, fuck I'm so tired"
+            ]
+        },
+        {
+            "tag" : "goodbye_night", 
+            "keywords" : [
+                "Good night babe xxx", 
+                "Nightttt Nighttt xoxox", 
+                "Sweet Dreams xx"
+            ],
+            "responses" : [
+                "Night Night b xx", 
+                "Sweet Dreams smelly xxx", 
+                "Good Night my Darling xxox"
+            ]
+        }
+    ]
+}
