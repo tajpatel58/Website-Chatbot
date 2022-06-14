@@ -4,9 +4,10 @@ import json
 from Scripts.model import NeuralNet
 from Scripts.text_cleaning import clean_text, bag_of_words
 from nltk.stem import PorterStemmer
+from torchserve.torch_handler.base_handler import BaseHandler
 import random
 
-class Chatbot:
+class ModelHandler(BaseHandler):
     def __init__(self, path):
     # Load in the trained model:
         self.chatbot_model_info = torch.load(path)
@@ -55,14 +56,3 @@ class Chatbot:
                     return random_response
         else:
             return "I'm not sure what you mean, please try a different message. :)"
-
-    def runbot(self):
-        while True:
-            message = input('Radhika: ')
-            if message == 'quit':
-                print('Goodbye xx')
-                break
-            print(f'Taj: {self.respond(message)}')
-
-
-bot = Chatbot('/Users/tajsmac/Documents/Girlfriend-Chatbot/Models/chat_model.pth').runbot()

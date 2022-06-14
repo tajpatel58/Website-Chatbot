@@ -71,8 +71,7 @@ trained_model = train(nn_model, optimizer, loss, number_of_epochs=1000)
 
 # Once we complete the training loop, we want to store some of the parameters like the "bag" so that once the bot is built, 
 # and a new message comes in, this can be turned into a feature vector and passed through our model. 
-chat_model = {
-    'net' : trained_model.state_dict(), 
+chat_model_helpers = {
     'input_size' : input_size, 
     'hidden_size_1' : hidden_layer_1, 
     'hidden_size_2' : hidden_layer_2, 
@@ -82,7 +81,11 @@ chat_model = {
     'raw_data' : train_data.raw_data
 }
 
-FILE = './Models/chat_model.pth'
-torch.save(chat_model, FILE)
-absolute_path = os.path.abspath('./Models/chat_model.pth')
+chat_model_weights = trained_model.state_dict()
+
+FILE = './Models/chat_model_weights.pth'
+FILE_2 = './Models/chat_model_helpers.pth'
+torch.save(chat_model_weights, FILE)
+torch.save(chat_model_helpers, FILE_2)
+absolute_path = os.path.abspath('./Models')
 print(f'Trained Model saved to {absolute_path}')
