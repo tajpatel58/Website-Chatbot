@@ -8,25 +8,28 @@ from torchserve.torch_handler.base_handler import BaseHandler
 import random
 
 class ModelHandler(BaseHandler):
-    def __init__(self, path):
-    # Load in the trained model:
-        self.chatbot_model_info = torch.load(path)
+    def initialize(self):
+        # Load in the trained model:
+        self.chatbot_model_weights = torch.load('/Users/tajsmac/Documents/Website-Chatbot/Models/chat_model_weights.pth')
+
+        # Load in helper variables:
+        self.helper_var = torch.load('/Users/tajsmac/Documents/Website-Chatbot/Models/chat_model_helpers.pth')
+        
 
         #Store the contents of the model dictionary:
-        self.num_features = self.chatbot_model_info['input_size']
-        hidden_layer_1 = self.chatbot_model_info['hidden_size_1']
-        hidden_layer_2 = self.chatbot_model_info['hidden_size_2']
-        num_classes = self.chatbot_model_info['output_size']
-        self.bag = self.chatbot_model_info['bag']
-        self.label_mapping = self.chatbot_model_info['label_mapping']
-        trained_params = self.chatbot_model_info['net']
-        self.raw_data = self.chatbot_model_info['raw_data']
+        self.num_features = self.helper_var['input_size']
+        hidden_layer_1 = self.helper_var['hidden_size_1']
+        hidden_layer_2 = self.helper_var['hidden_size_2']
+        num_classes = self.helper_var['output_size']
+        self.bag = self.helper_var['bag']
+        self.label_mapping = self.helper_var['label_mapping']
+        self.raw_data = self.helper_var['raw_data']
 
         #Load in an untrained model:
         self.net = NeuralNet(self.num_features, hidden_layer_1, hidden_layer_2, num_classes)
 
         #Change randomised model parameters to trained params:
-        self.net.load_state_dict(trained_params)
+        self.net.load_state_dict(self.chatbot_model_weights)
 
         # Set model to evaluation mode:
         self.net.eval()
@@ -35,15 +38,23 @@ class ModelHandler(BaseHandler):
         self.stem = PorterStemmer()
 
         ### Function to take in a message as text and output a response: 
-    def respond(self, message):
+    def preprocess(self, message):
         clean_message = clean_text(message, self.stem)
         feature_vec = bag_of_words(clean_message, self.bag)
         # Reshape into a matrix
         feature_vec = feature_vec.reshape(1, self.num_features)
+        return feature_vec
+
+
+    def inference(self, ftrs_vec):
         #Feed through model:
-        output_vec = self.net(feature_vec)
+        output_vec = self.net(ftrs_vec)
         # Based on the fact Softmax function is an increasing function, the index of highest value is the class we're predicting,
         val, prediction = torch.max(output_vec, axis=1)
+        return val, prediction
+
+    def handle(self, val, prediction):
+    
         # Note that the variable "prediction" is a label number, to get the actual label/tag we can use the label,mapping dictionary. 
         predicted_tag = list(self.label_mapping.keys())[prediction]
         # Only give a response if we're more than 75% sure that the tag is correct (ie the probabilitiy of this datapoint belonging to class is >= 0.75)
