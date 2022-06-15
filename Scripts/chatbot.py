@@ -12,10 +12,11 @@ class ModelHandler(BaseHandler):
         super().__init__()
         self.initialized = False
 
-        
+
     def initialize(self):
         # Load in helper variables:
-        self.helper_var = torch.load('/Users/tajsmac/Documents/Website-Chatbot/Models/chat_model_helpers.pth')
+        self.helper_var = torch.load('/Models/chat_model_helpers.pth')
+        self.model_weights = torch.load('/Models/chat_model_weights.pth')
         
         #Store the contents of the model dictionary:
         self.num_features = self.helper_var['input_size']
@@ -30,7 +31,7 @@ class ModelHandler(BaseHandler):
         self.model = NeuralNet(self.num_features, hidden_layer_1, hidden_layer_2, num_classes)
 
         #Change randomised model parameters to trained params:
-        self.model.load_state_dict(self.chatbot_model_weights)
+        self.model.load_state_dict(self.model_weights)
 
         # Set model to evaluation mode:
         self.model.eval()
