@@ -7,6 +7,7 @@ from nltk.stem import PorterStemmer
 from torchserve.torch_handler.base_handler import BaseHandler
 import random
 
+path = '/Users/tajsmac/Documents/Website-Chatbot/Models/chat_model.pth'
 class ModelHandler(BaseHandler):
     def __init__(self):
         super().__init__()
@@ -15,23 +16,22 @@ class ModelHandler(BaseHandler):
 
     def initialize(self):
         # Load in helper variables:
-        self.helper_var = torch.load('/Models/chat_model_helpers.pth')
-        self.model_weights = torch.load('/Models/chat_model_weights.pth')
+        self.model_params = torch.load(path)
         
         #Store the contents of the model dictionary:
-        self.num_features = self.helper_var['input_size']
-        hidden_layer_1 = self.helper_var['hidden_size_1']
-        hidden_layer_2 = self.helper_var['hidden_size_2']
-        num_classes = self.helper_var['output_size']
-        self.bag = self.helper_var['bag']
-        self.label_mapping = self.helper_var['label_mapping']
-        self.raw_data = self.helper_var['raw_data']
+        self.num_features = self.model_params['input_size']
+        hidden_layer_1 = self.model_params['hidden_size_1']
+        hidden_layer_2 = self.model_params['hidden_size_2']
+        num_classes = self.model_params['output_size']
+        self.bag = self.model_params['bag']
+        self.label_mapping = self.model_params['label_mapping']
+        self.raw_data = self.model_params['raw_data']
 
         #Load in an untrained model:
         self.model = NeuralNet(self.num_features, hidden_layer_1, hidden_layer_2, num_classes)
 
         #Change randomised model parameters to trained params:
-        self.model.load_state_dict(self.model_weights)
+        self.model.load_state_dict(self.model_params['model_weights'])
 
         # Set model to evaluation mode:
         self.model.eval()
