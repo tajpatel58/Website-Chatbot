@@ -8,14 +8,15 @@ from torchserve.torch_handler.base_handler import BaseHandler
 import random
 
 class ModelHandler(BaseHandler):
-    def initialize(self):
-        # Load in the trained model:
-        self.chatbot_model_weights = torch.load('/Users/tajsmac/Documents/Website-Chatbot/Models/chat_model_weights.pth')
+    def __init__(self):
+        super().__init__()
+        self.initialized = False
 
+        
+    def initialize(self):
         # Load in helper variables:
         self.helper_var = torch.load('/Users/tajsmac/Documents/Website-Chatbot/Models/chat_model_helpers.pth')
         
-
         #Store the contents of the model dictionary:
         self.num_features = self.helper_var['input_size']
         hidden_layer_1 = self.helper_var['hidden_size_1']
@@ -26,13 +27,13 @@ class ModelHandler(BaseHandler):
         self.raw_data = self.helper_var['raw_data']
 
         #Load in an untrained model:
-        self.net = NeuralNet(self.num_features, hidden_layer_1, hidden_layer_2, num_classes)
+        self.model = NeuralNet(self.num_features, hidden_layer_1, hidden_layer_2, num_classes)
 
         #Change randomised model parameters to trained params:
-        self.net.load_state_dict(self.chatbot_model_weights)
+        self.model.load_state_dict(self.chatbot_model_weights)
 
         # Set model to evaluation mode:
-        self.net.eval()
+        self.model.eval()
 
         #Initialise Stemmer:
         self.stem = PorterStemmer()
@@ -48,7 +49,7 @@ class ModelHandler(BaseHandler):
 
     def inference(self, ftrs_vec):
         #Feed through model:
-        output_vec = self.net(ftrs_vec)
+        output_vec = self.model(ftrs_vec)
         # Based on the fact Softmax function is an increasing function, the index of highest value is the class we're predicting,
         val, prediction = torch.max(output_vec, axis=1)
         return val, prediction
