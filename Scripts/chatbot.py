@@ -12,13 +12,16 @@ class ModelHandler(BaseHandler):
     def __init__(self):
         super().__init__()
         self.initialized = False
+        self._context = None
+        self.model = None
 
 
-    def initialize(self):
-        print('hello')
+    def initialize(self, context):
+        self._context = context
+        self.initialized = True
+        self.manifest = context.manifest
         # Load in helper variables:
         self.model_params = torch.load(path)
-        print(len(self.model_params))
         
         #Store the contents of the model dictionary:
         self.num_features = self.model_params['input_size']
@@ -34,14 +37,11 @@ class ModelHandler(BaseHandler):
 
         #Change randomised model parameters to trained params:
         self.model.load_state_dict(self.model_params['model_weights'])
-
         # Set model to evaluation mode:
         self.model.eval()
 
         #Initialise Stemmer:
         self.stem = PorterStemmer()
-
-        self.initialized = True
 
         ### Function to take in a message as text and output a response: 
     def preprocess(self, message):
@@ -73,5 +73,3 @@ class ModelHandler(BaseHandler):
                     return random_response
         else:
             return "I'm not sure what you mean, please try a different message. :)"
-a = ModelHandler()
-a.initialize()
