@@ -1,10 +1,10 @@
 #Import Packages:
 import torch
-import json
-from Scripts.model import NeuralNet
-from Scripts.text_cleaning import clean_text, bag_of_words
 from nltk.stem import PorterStemmer
-from torchserve.torch_handler.base_handler import BaseHandler
+from torch import nn
+from text_cleaning import clean_text, bag_of_words
+from model import NeuralNet
+from ts.torch_handler.base_handler import BaseHandler
 import random
 
 path = '/Users/tajsmac/Documents/Website-Chatbot/Models/chat_model.pth'
@@ -15,8 +15,10 @@ class ModelHandler(BaseHandler):
 
 
     def initialize(self):
+        print('hello')
         # Load in helper variables:
         self.model_params = torch.load(path)
+        print(len(self.model_params))
         
         #Store the contents of the model dictionary:
         self.num_features = self.model_params['input_size']
@@ -38,6 +40,8 @@ class ModelHandler(BaseHandler):
 
         #Initialise Stemmer:
         self.stem = PorterStemmer()
+
+        self.initialized = True
 
         ### Function to take in a message as text and output a response: 
     def preprocess(self, message):
@@ -69,3 +73,5 @@ class ModelHandler(BaseHandler):
                     return random_response
         else:
             return "I'm not sure what you mean, please try a different message. :)"
+a = ModelHandler()
+a.initialize()
