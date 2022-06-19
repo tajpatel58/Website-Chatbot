@@ -27,13 +27,13 @@ class ModelHandler(BaseHandler):
         self.num_features = self.model_params['input_size']
         hidden_layer_1 = self.model_params['hidden_size_1']
         hidden_layer_2 = self.model_params['hidden_size_2']
-        num_classes = self.model_params['output_size']
+        self.num_classes = self.model_params['output_size']
         self.bag = self.model_params['bag']
         self.label_mapping = self.model_params['label_mapping']
         self.raw_data = self.model_params['raw_data']
 
         #Load in an untrained model:
-        self.model = NeuralNet(self.num_features, hidden_layer_1, hidden_layer_2, num_classes)
+        self.model = NeuralNet(self.num_features, hidden_layer_1, hidden_layer_2, self.num_classes)
 
         #Change randomised model parameters to trained params:
         self.model.load_state_dict(self.model_params['model_weights'])
@@ -43,8 +43,11 @@ class ModelHandler(BaseHandler):
         #Initialise Stemmer:
         self.stem = PorterStemmer()
 
+
         ### Function to take in a message as text and output a response: 
-    def preprocess(self, message):
+    def preprocess(self, data):
+        bytes_message = data[0].get("message")
+        message = str(bytes_message, 'utf-8')
         clean_message = clean_text(message, self.stem)
         feature_vec = bag_of_words(clean_message, self.bag)
         # Reshape into a matrix
@@ -55,21 +58,35 @@ class ModelHandler(BaseHandler):
     def inference(self, ftrs_vec):
         #Feed through model:
         output_vec = self.model(ftrs_vec)
-        # Based on the fact Softmax function is an increasing function, the index of highest value is the class we're predicting,
-        val, prediction = torch.max(output_vec, axis=1)
-        return val, prediction
+        return output_vec
 
-    def handle(self, val, prediction):
-    
-        # Note that the variable "prediction" is a label number, to get the actual label/tag we can use the label,mapping dictionary. 
-        predicted_tag = list(self.label_mapping.keys())[prediction]
-        # Only give a response if we're more than 75% sure that the tag is correct (ie the probabilitiy of this datapoint belonging to class is >= 0.75)
-        probability = torch.softmax(val, axis=0)
-        if probability >= 0.75:
-            # Choose a random response from the predefined responses:
+
+    def postprocess(self, output_vec):
+        index_to_tag = {v : k for k,v in self.label_mapping.items()}
+        print(output_vec.shape)
+        with torch.no_grad():
+            probabilities_vec = torch.softmax(output_vec, 1)
+        tag_probabilities = {index_to_tag.get(i) : probabilities_vec[0, i].item() for i in range(self.num_classes)}
+        print(tag_probabilities)
+        return [tag_probabilities]
+
+
+    def respond(self, output_vec):
+        val, class_num = torch.max(output_vec, axis=1)
+        predicted_tag = list(self.label_mapping.keys())[class_num]
+        probability_class = torch.softmax(val, axis=0)
+        if probability_class >= 0.75:
             for message_group in self.raw_data['messages']:
                 if predicted_tag == message_group['tag']:
                     random_response = random.choice(message_group['responses'])
                     return random_response
         else:
-            return "I'm not sure what you mean, please try a different message. :)"
+            return "I'm not sure what you mean, please try a different question"
+
+
+    def handle(self, data, context):
+        model_input = self.preprocess(data)
+        model_output = self.inference(model_input)
+        response = self.respond(model_output)
+        tag_probabilities = self.postprocess(model_output)
+        return tag_probabilities
