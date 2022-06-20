@@ -6,8 +6,7 @@ from text_cleaning import clean_text, bag_of_words
 from model import NeuralNet
 from ts.torch_handler.base_handler import BaseHandler
 import random
-
-path = '/Users/tajsmac/Documents/Website-Chatbot/Models/chat_model.pth'
+import os
 class ModelHandler(BaseHandler):
     def __init__(self):
         super().__init__()
@@ -17,11 +16,18 @@ class ModelHandler(BaseHandler):
 
 
     def initialize(self, context):
+        #Context passed in during deployment
         self._context = context
         self.initialized = True
         self.manifest = context.manifest
+
+        properties = context.system_properties
+        #Construct path for .pth file
+        model_dir = properties.get("model_dir")
+        serialized_file = self.manifest["model"]["serializedFile"]
+        model_pth_path = os.path.join(model_dir, serialized_file)
         # Load in helper variables:
-        self.model_params = torch.load(path)
+        self.model_params = torch.load(model_pth_path)
         
         #Store the contents of the model dictionary:
         self.num_features = self.model_params['input_size']
@@ -63,11 +69,9 @@ class ModelHandler(BaseHandler):
 
     def postprocess(self, output_vec):
         index_to_tag = {v : k for k,v in self.label_mapping.items()}
-        print(output_vec.shape)
         with torch.no_grad():
             probabilities_vec = torch.softmax(output_vec, 1)
         tag_probabilities = {index_to_tag.get(i) : probabilities_vec[0, i].item() for i in range(self.num_classes)}
-        print(tag_probabilities)
         return [tag_probabilities]
 
 
