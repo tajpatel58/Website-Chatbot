@@ -4,16 +4,11 @@
             "tag" : "greeting", 
             "keywords" : [
                 "Hello", 
-                "Hi Babe", 
-                "Sup",
-                "Hi",
+                "Hi", 
                 "Hey"
             ], 
              "responses" : [
-                "Hello Babe",
-                "How is my darling?",
-                "Hello, how are you?", 
-                "Hey, What you up to?"
+                "Hi there, nice to meet you!"
              ]
         },
         {
