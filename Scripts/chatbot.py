@@ -7,6 +7,8 @@ from model import NeuralNet
 from ts.torch_handler.base_handler import BaseHandler
 import random
 import os
+
+
 class ModelHandler(BaseHandler):
     def __init__(self):
         super().__init__()
@@ -26,6 +28,7 @@ class ModelHandler(BaseHandler):
         model_dir = properties.get("model_dir")
         serialized_file = self.manifest["model"]["serializedFile"]
         model_pth_path = os.path.join(model_dir, serialized_file)
+
         # Load in helper variables:
         self.model_params = torch.load(model_pth_path)
         
@@ -52,8 +55,8 @@ class ModelHandler(BaseHandler):
 
         ### Function to take in a message as text and output a response: 
     def preprocess(self, data):
-        bytes_message = data[0].get("message")
-        message = str(bytes_message, 'utf-8')
+        byte_message = data[0].get("message")
+        message = byte_message.decode('utf-8')
         clean_message = clean_text(message, self.stem)
         feature_vec = bag_of_words(clean_message, self.bag)
         # Reshape into a matrix
@@ -93,4 +96,4 @@ class ModelHandler(BaseHandler):
         model_output = self.inference(model_input)
         response = self.respond(model_output)
         tag_probabilities = self.postprocess(model_output)
-        return tag_probabilities
+        return [response]
