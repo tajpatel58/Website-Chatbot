@@ -55,8 +55,8 @@ class ModelHandler(BaseHandler):
 
         ### Function to take in a message as text and output a response: 
     def preprocess(self, data):
-        byte_message = data[0].get("message")
-        message = byte_message.decode('utf-8')
+        print(data)
+        message = data[0].get("body").get("message")
         clean_message = clean_text(message, self.stem)
         feature_vec = bag_of_words(clean_message, self.bag)
         # Reshape into a matrix
