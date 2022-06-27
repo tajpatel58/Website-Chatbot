@@ -14,8 +14,8 @@
         {
             "tag" : "darktrace", 
             "keywords" : [
-                "How was your day?", 
-                "How was work?"
+                "What did you do at Darktrace?",
+                "What were your responsibilities at Darktrace?"
             ], 
             "responses" : [
                 "Long as fuck day", 
@@ -43,9 +43,8 @@
         {
             "tag" : "hobbies", 
             "keywords" : [
-                "See you later", 
-                "See you babe", 
-                "Speak later xx"
+                "What do you like to do in your free time?", 
+                "What are some of your hobbies?"
             ], 
             "responses" : [
                 "Cool in a bit babe", 
@@ -58,16 +57,11 @@
         {
             "tag" : "technologies",
             "keywords" : [
-                "What are your plans today?", 
-                "What you doing?", 
-                "Doing anything fun today?"
+                "What technologies do you know?", 
+                "What's your data science stack?"
             ], 
             "responses" : [
-                "Just chilling", 
-                "Going to workout", 
-                "Going bouldering", 
-                "Got my TV shows", 
-                "Going to go Morrisons, get some stuff"
+                "I feel comfortable with many Python packages: Numpy, Pandas, PyTorch. I also have a lot of experience with SQL. I'm currently focusing on bettering myself with SkLearn and Docker."
             ]
         }
     ]
