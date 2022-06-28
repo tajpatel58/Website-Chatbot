@@ -34,7 +34,7 @@ class ChatbotDataset(Dataset):
 
 
     def load_data(self): 
-        self.raw_data = self.get_raw_data('/Users/tajsmac/Documents/Girlfriend-Chatbot/Data/message_data.json')
+        self.raw_data = self.get_raw_data('/Users/tajsmac/Documents/Website-Chatbot/Data/message_data.json')
 
         # Dictionary to store numerical encoding of labels.
         self.label_mapping = {}
