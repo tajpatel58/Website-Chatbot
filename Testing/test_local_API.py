@@ -3,7 +3,7 @@ import unittest
 
 class LocalAPITestCase(unittest.TestCase):
     def test_API(self):
-        response = requests.post("http://localhost:8080/predictions/chatbot",{"message" : "Hi Babe"})
+        response = requests.post("http://localhost:8080/ping")
         status_code = response.status_code
         self.assertEqual(status_code, 200)
 
