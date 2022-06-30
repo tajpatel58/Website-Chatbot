@@ -30,3 +30,6 @@ This project has been cloned from my Girlfriend chatbot repo hence there will be
 ### Step 4: Docker:
 - Create requirements.txt for model. 
 - Dockerfile to package model. 
+
+### Step 5: Fetch API:
+- Setup FetchAPI into website Javascript to be able to make requests. 
