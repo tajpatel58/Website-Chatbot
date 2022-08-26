@@ -18,6 +18,8 @@ COPY ./Scripts/chatbot.py /home/model-server/Scripts
 COPY ./Scripts/model.py /home/model-server/Scripts
 COPY ./Scripts/text_cleaning.py /home/model-server/Scripts
 COPY ./requirements.txt /home/model-server/
+COPY ./SSLCertificate /home/model-server/SSLCertificate
+COPY ./Bash_Scripts /home/model-server/Bash_Scripts
 
 USER root
 
@@ -29,6 +31,10 @@ RUN rm -rf config.properties
 EXPOSE 8080
 EXPOSE 8081
 EXPOSE 8082
+EXPOSE 443
+EXPOSE 8443
+EXPOSE 8444
+EXPOSE 8445
 
 # Run Model Archiver. 
 RUN torch-model-archiver \
