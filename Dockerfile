@@ -36,6 +36,10 @@ EXPOSE 8443
 EXPOSE 8444
 EXPOSE 8445
 
+# Install Nano
+RUN apt-get -y update 
+RUN apt-get -y install nano
+
 # Run Model Archiver. 
 RUN torch-model-archiver \
     --model-name Chatbot_Model \

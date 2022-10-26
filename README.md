@@ -11,7 +11,7 @@
 - PyTorch - Building Model.
 - Docker - Packaging for deployment. 
 - Torchserve - Model serving. 
-- Google Cloud Platform - Model deployment and Load balancing.s
+- Google Cloud Platform - Model deployment and Load balancing. 
 
 ### Project Overview: 
 
