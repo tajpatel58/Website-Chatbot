@@ -16,10 +16,10 @@ writer = SummaryWriter()
 train_data = ChatbotDataset()
 
 #Model Hyperparams: 
-input_size = train_data.bag_size
+input_size = train_data.get_bag_size()
 hidden_layer_1 = 10
 hidden_layer_2 = 6
-num_classes = train_data.num_classses
+num_classes = train_data.get_num_classes()
 batch_size = 6
 learning_rate = 0.001
 num_epochs = 1000

@@ -75,3 +75,9 @@ class ChatbotDataset(Dataset):
             self.bag.update(set(cleaned_message))
         self.bag = list(self.bag)
         self.bag_size = len(self.bag)
+
+    def get_num_clases(self):
+        return self.num_classses
+    
+    def get_bag_size(self):
+        return self.bag_size
