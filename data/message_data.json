@@ -1,0 +1,74 @@
+{
+    "messages" : [
+        {
+            "tag" : "greeting", 
+            "keywords" : [
+                "Hello", 
+                "Hi", 
+                "Hey"
+            ], 
+             "responses" : [
+                "Hi there, nice to meet you! Hope you're having a nice day. :)"
+             ]
+        },
+        {
+            "tag" : "darktrace", 
+            "keywords" : [
+                "What did you do at Darktrace?",
+                "What were your responsibilities at Darktrace?"
+            ], 
+            "responses" : [
+                "At Darktrace I: <br> - Developed a lead scoring model to rank leads brought in through different channels. <br> - Developed a forecasting model to determine lead requirements from different channels. <br> - Data mining and created dashboards on PowerBi for stakeholders."
+            ]
+        },
+        {
+            "tag" : "hobbies", 
+            "keywords" : [
+                "What do you like to do in your free time?", 
+                "What are some of your hobbies?",
+                "Whare are your interests?"
+            ], 
+            "responses" : [
+                "In my spare time I like to do things that keep me fit so I can eat more when I go out! :D I enjoy bouldering/ rock climbing/ snooker and cooking."
+            ]    
+        },
+        {
+            "tag" : "technologies",
+            "keywords" : [
+                "What technologies do you know?", 
+                "What's your data science stack?"
+            ], 
+            "responses" : [
+                "I feel comfortable with a few of the main Python packages: Numpy, Pandas, PyTorch and I also have a lot of experience with SQL. I'm currently focusing on bettering myself with SkLearn and Docker."
+            ]
+        },
+        {
+            "tag" : "birthday",
+            "keywords" : [
+                "When is your birthday?"
+            ],
+            "responses" : [
+                "My birthday is the 29th of August 1998"
+            ]
+        }, 
+        {
+            "tag" : "colour", 
+            "keywords" : [
+                "What's your favourite colour?"
+            ],
+            "responses" : [
+                "My favourite colour is purple"
+            ]
+        }, 
+        {
+            "tag" : "education", 
+            "keywords" : [
+                "What did you study at Imperial?", 
+                "What did you study at Warwick?"
+            ], 
+            "response" : [
+                "During my time at Warwick and Imperial, I focused on solving differential equations and probability theory. So quite different from Data science but still makes it easier to understand the Statistical and Mathematical theory behind machine learning."
+            ]
+        }
+    ]
+}
