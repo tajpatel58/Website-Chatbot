@@ -1,1 +1,0 @@
-docker run -t -d --rm -p 8080:8080 --name=test_chatbot_1 chatbot
