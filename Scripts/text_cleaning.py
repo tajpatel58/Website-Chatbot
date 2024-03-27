@@ -1,5 +1,4 @@
 import torch
-from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 
 
@@ -10,7 +9,7 @@ def clean_text(text: str, stemmer: PorterStemmer, stop_words: list) -> list:
     return clean_text
 
 
-def bag_of_words(tokenized_text, bag):
+def bag_of_words(tokenized_text: list, bag: list) -> torch.Tensor:
     feature_vec = torch.zeros(len(bag))
     for idx, word in enumerate(bag):
         if word in tokenized_text:
