@@ -1,5 +1,5 @@
 import unittest
-from Scripts.chat_bot_dataset import ChatbotDataset
+from Scripts.dataset import ChatbotDataset
 
 class DatasetTestCase(unittest.TestCase):
     def setUp(self) -> None:

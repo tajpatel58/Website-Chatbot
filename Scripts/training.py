@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import copy
 import os
-from chat_bot_dataset import ChatbotDataset
+from Scripts.dataset import ChatbotDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 from model import NeuralNet
