@@ -1,82 +1,95 @@
-# Import relevant packages:
-import torch
-import torch.nn as nn
-from torch.utils.data import Dataset, DataLoader
-import numpy as np
-from nltk.stem import PorterStemmer
-from nltk.tokenize import word_tokenize
 import json
-from scripts.text_cleaning import clean_text, bag_of_words
+import pandas as pd
+from pathlib import Path
+from nltk.stem import PorterStemmer
+from torch.utils.data import Dataset
+from sklearn.preprocessing import LabelEncoder
+from scripts.text_cleaning import clean_text, bow_text_to_tensor
 
 
 class ChatbotDataset(Dataset):
-    def __init__(self, stemmer: PorterStemmer, stop_words: list):
+    def __init__(self, data_path: Path, stemmer: PorterStemmer, stop_words: list):
         self.stemmer = stemmer
+        self.data_path = data_path
         self.stop_words = stop_words
-        self.load_data()
-        self.clean_data()
+        self.set_label_encoder()
 
     def __getitem__(self, idx):
-        cleaned_text = self.cleaned_messages_list[idx]
-        features_vector = bag_of_words(cleaned_text, self.bag)
-        corresponding_encoded_label = self.numeric_labels[idx]
-        return features_vector, corresponding_encoded_label
+        return self.feature_tensors_list[idx], self.encoded_labels_list[idx]
 
     def __len__(self):
         return len(self.messages_list)
 
-    def get_raw_data(self, data_path):
+    def get_raw_data(self, data_path) -> dict:
         with open(data_path, "r") as f:
             message_json = json.loads(f.read())
-
         return message_json
 
-    def load_data(self):
-        self.raw_data = self.get_raw_data(
-            "/Users/tajsmac/Documents/Website-Chatbot/Data/message_data.json"
+    def load_data(self, data_path: Path) -> pd.DataFrame:
+        raw_json_data = self.get_raw_data(data_path)
+
+        questions_df_list = []
+        messages_dict_list = raw_json_data["messages"]
+        for question_grouping in messages_dict_list:
+            question_df = pd.DataFrame({"question": question_grouping["question"]})
+            question_df["question_type"] = question_grouping["question_type"]
+            questions_df_list.append(question_df)
+        question_label_df = pd.concat(questions_df_list, axis=0).reset_index(drop=True)
+        return question_label_df
+
+    def set_label_encoder(self):
+        self.label_encoder = LabelEncoder()
+
+    def get_label_encoder(self):
+        return self.label_encoder
+
+    def clean_data(self, question_label_df: pd.DataFrame) -> pd.DataFrame:
+        # remove punctuation:
+        cleaned_question_label_df = question_label_df
+        cleaned_question_label_df[
+            "question_no_punctuation"
+        ] = cleaned_question_label_df["question"].str.replace(
+            r"[^[a-zA-Z\s]", "", regex=True
         )
 
-        # Dictionary to store numerical encoding of labels.
-        self.label_mapping = {}
-        # label_index increments everytime a new label/tag is seen.
-        label_index = 0
+        # clean/tokenize text:
+        cleaned_question_label_df["tokenized_question"] = cleaned_question_label_df[
+            "question_no_punctuation"
+        ].apply(clean_text, args=(self.stemmer, self.stop_words))
 
-        # list to store each message in dataset:
-        self.messages_list = []
+        # encode labels:
+        cleaned_question_label_df[
+            "question_type_encoded"
+        ] = self.label_encoder.fit_transform(cleaned_question_label_df["question_type"])
+        return cleaned_question_label_df
 
-        # list to store message_labels:
-        self.labels = []
+    def set_bag_of_words(self, cleaned_question_label_df: pd.DataFrame) -> set:
+        self.bag_of_words = set(cleaned_question_label_df["tokenized_question"].sum())
+        self.bag_size = len(self.bag_of_words)
+        return self.bag_of_words, self.bag_size
 
-        for message_group in self.raw_data["messages"]:
-            # create a numerical encoding for message tags.
-            if message_group["tag"] not in self.label_mapping:
-                self.label_mapping[message_group["tag"]] = label_index
-                label_index += 1
+    def get_bag_words(self):
+        return self.bag_of_words, self.bag_size
 
-            self.messages_list.extend(message_group["keywords"])
-            self.labels.extend([message_group["tag"]] * len(message_group["keywords"]))
-
-        # Get numerical encoding of labels
-        self.numeric_labels = [self.label_mapping[label] for label in self.labels]
-
-        # Number of classes:
-        self.num_classses = label_index
-
-    def clean_data(self):
-        # Clean up all messages and extracting "bag" for bag of words:
-        self.bag = set()
-
-        # list to hold cleaned messages:
-        self.cleaned_messages_list = []
-        for message in self.messages_list:
-            cleaned_message = clean_text(message, self.stemmer)
-            self.cleaned_messages_list.append(cleaned_message)
-            self.bag.update(set(cleaned_message))
-        self.bag = list(self.bag)
-        self.bag_size = len(self.bag)
+    def set_features_and_labels(self, cleaned_question_label_df: pd.DataFrame) -> tuple:
+        self.feature_tensors_list = [
+            bow_text_to_tensor(tokenized_text, self.bag_of_words)
+            for tokenized_text in cleaned_question_label_df["tokenized_question"]
+        ]
+        self.encoded_labels_list = cleaned_question_label_df[
+            "question_type_encoded"
+        ].tolist()
+        return self.feature_tensors_list, self.encoded_labels_list
 
     def get_num_clases(self):
-        return self.num_classses
+        num_classes = len(self.label_encoder.classes_)
+        return num_classes
 
     def get_bag_size(self):
         return self.bag_size
+
+    def load_and_process_data(self):
+        raw_data_df = self.load_data(self.data_path)
+        cleaned_questions_data = self.clean_data(raw_data_df)
+        self.set_bag_of_words(cleaned_questions_data)
+        self.set_features_and_labels(cleaned_questions_data)
