@@ -2,7 +2,7 @@
 
 ### Model Flow Chart:
 
-![plot](./Models/ML-Flow-Chart.png)
+![plot](./models/ML-Flow-Chart.png)
 
 ### Packages/Tech Used: 
 
