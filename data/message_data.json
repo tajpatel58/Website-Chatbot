@@ -1,8 +1,8 @@
 {
     "messages" : [
         {
-            "tag" : "greeting", 
-            "keywords" : [
+            "question_type" : "greeting", 
+            "question" : [
                 "Hello", 
                 "Hi", 
                 "Hey"
@@ -12,8 +12,8 @@
              ]
         },
         {
-            "tag" : "darktrace", 
-            "keywords" : [
+            "question_type" : "darktrace", 
+            "question" : [
                 "What did you do at Darktrace?",
                 "What were your responsibilities at Darktrace?"
             ], 
@@ -22,19 +22,19 @@
             ]
         },
         {
-            "tag" : "hobbies", 
-            "keywords" : [
+            "question_type" : "hobbies", 
+            "question" : [
                 "What do you like to do in your free time?", 
                 "What are some of your hobbies?",
-                "Whare are your interests?"
+                "What are your interests?"
             ], 
             "responses" : [
                 "In my spare time I like to do things that keep me fit so I can eat more when I go out! :D I enjoy bouldering/ rock climbing/ snooker and cooking."
             ]    
         },
         {
-            "tag" : "technologies",
-            "keywords" : [
+            "question_type" : "technologies",
+            "question" : [
                 "What technologies do you know?", 
                 "What's your data science stack?"
             ], 
@@ -43,8 +43,8 @@
             ]
         },
         {
-            "tag" : "birthday",
-            "keywords" : [
+            "question_type" : "birthday",
+            "question" : [
                 "When is your birthday?"
             ],
             "responses" : [
@@ -52,8 +52,8 @@
             ]
         }, 
         {
-            "tag" : "colour", 
-            "keywords" : [
+            "question_type" : "colour", 
+            "question" : [
                 "What's your favourite colour?"
             ],
             "responses" : [
@@ -61,12 +61,12 @@
             ]
         }, 
         {
-            "tag" : "education", 
-            "keywords" : [
+            "question_type" : "education", 
+            "question" : [
                 "What did you study at Imperial?", 
                 "What did you study at Warwick?"
             ], 
-            "response" : [
+            "responses" : [
                 "During my time at Warwick and Imperial, I focused on solving differential equations and probability theory. So quite different from Data science but still makes it easier to understand the Statistical and Mathematical theory behind machine learning."
             ]
         }
