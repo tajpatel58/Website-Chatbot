@@ -1,9 +1,9 @@
-import os
 import copy
 import nltk
 import torch
 import mlflow
 import torch.nn as nn
+from pathlib import Path
 from torch.optim import Adam
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
@@ -19,13 +19,15 @@ mlflow.set_tracking_uri("http://127.0.0.1:6090")
 mlflow.set_experiment("chatbot")
 
 # Data Processing Variables:
-data_path = "/Users/taj/Documents/Website-Chatbot/data/message_data.json"
+data_path = Path("/Users/taj/Documents/Website-Chatbot/data/message_data.json")
+preprocessing_objs_path = Path("/Users/taj/Documents/Website-Chatbot/logging/processing/")
 stemmer = PorterStemmer()
 stop_words = list(stopwords.words("english"))
 
 # Initialise Training Dataset:
 train_data = ChatbotDataset(data_path, stemmer, stop_words)
 train_data.load_and_process_data()
+preprocessing_artifacts_paths = train_data.pickle_preprocessing_objs(preprocessing_objs_path)
 
 # Model Hyperparams:
 input_size = train_data.get_bag_size()
@@ -69,7 +71,7 @@ def train(model, optim, loss_func, number_of_epochs=100):
             error.backward()
             optim.step()
             optim.zero_grad()
-            
+
         epoch_accuracy = torch.div(epoch_accuracy, num_training_data_points)
         if epoch_accuracy >= best_acc:
             best_model = model_state
@@ -84,7 +86,8 @@ def train(model, optim, loss_func, number_of_epochs=100):
 
 
 trained_model, best_accuracy = train(nn_model, optimizer, loss, number_of_epochs=1000)
-mlflow.pytorch.log_model(trained_model, "model")
+mlflow.pytorch.log_model(trained_model, "model", 
+                         code_paths=preprocessing_artifacts_paths)
 mlflow.log_metric("training_loss", best_accuracy)
 
 # Once we complete the training loop, we want to store some of the parameters like the "bag" so that once the bot is built,

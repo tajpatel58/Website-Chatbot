@@ -1,4 +1,5 @@
 import json
+import pickle
 import pandas as pd
 from pathlib import Path
 from nltk.stem import PorterStemmer
@@ -77,15 +78,28 @@ class ChatbotDataset(Dataset):
         ].tolist()
         return self.feature_tensors_list, self.encoded_labels_list
 
-    def get_num_classes(self):
+    def get_num_classes(self) -> int:
         num_classes = len(self.label_encoder.classes_)
         return num_classes
 
-    def get_bag_size(self):
+    def get_bag_size(self) -> int:
         return self.bag_size
 
-    def load_and_process_data(self):
+    def load_and_process_data(self) -> None:
         raw_data_df = self.load_data(self.data_path)
         cleaned_questions_data = self.clean_data(raw_data_df)
         self.set_bag_of_words(cleaned_questions_data)
         self.set_features_and_labels(cleaned_questions_data)
+
+    def pickle_preprocessing_objs(self, pickle_path: Path) -> dict:
+        label_encoder_path = pickle_path / "label_encoder.pkl"
+        bag_of_words_path = pickle_path / "training_bag_of_words.pkl"
+        pkl_path_obj_dict = {label_encoder_path : self.label_encoder,
+                             bag_of_words_path: self.bag_of_words}
+        
+        pkl_paths = list(pkl_path_obj_dict.keys())
+        for pkl_path, obj in pkl_path_obj_dict.items():
+            with open(pkl_path, "wb") as f:
+                pickle.dump(obj, f)
+        return pkl_paths
+
