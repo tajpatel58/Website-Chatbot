@@ -46,21 +46,17 @@ class ChatbotDataset(Dataset):
     def clean_data(self, question_label_df: pd.DataFrame) -> pd.DataFrame:
         # remove punctuation:
         cleaned_question_label_df = question_label_df
-        cleaned_question_label_df[
-            "question_no_punctuation"
-        ] = cleaned_question_label_df["question"].str.replace(
-            r"[^[a-zA-Z\s]", "", regex=True
-        )
 
         # clean/tokenize text:
         cleaned_question_label_df["tokenized_question"] = cleaned_question_label_df[
-            "question_no_punctuation"
+            "question"
         ].apply(clean_text, args=(self.stemmer, self.stop_words))
 
         # encode labels:
         cleaned_question_label_df[
             "question_type_encoded"
         ] = self.label_encoder.fit_transform(cleaned_question_label_df["question_type"])
+
         return cleaned_question_label_df
 
     def set_bag_of_words(self, cleaned_question_label_df: pd.DataFrame) -> set:

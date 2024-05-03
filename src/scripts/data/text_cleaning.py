@@ -1,10 +1,12 @@
 import torch
+import string
 from nltk.stem import PorterStemmer
 
 
 def clean_text(text: str, stemmer: PorterStemmer, stop_words: list) -> list:
     lowered_text = text.lower()
-    list_text = lowered_text.split(" ")
+    text_no_punctuation = lowered_text.translate(str.maketrans('', '', string.punctuation))
+    list_text = text_no_punctuation.split()
     clean_text = [stemmer.stem(word) for word in list_text if word not in stop_words]
     return clean_text
 
