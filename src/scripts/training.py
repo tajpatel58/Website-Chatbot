@@ -1,3 +1,4 @@
+import os
 import copy
 import nltk
 import torch
@@ -15,7 +16,7 @@ nltk.download('stopwords')
 
 # Create Writer:
 writer = SummaryWriter("/Users/taj/Documents/Website-Chatbot/logging/tensorboard")
-mlflow.set_tracking_uri("http://127.0.0.1:6090")
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
 mlflow.set_experiment("chatbot")
 
 # Data Processing Variables:
@@ -86,8 +87,9 @@ def train(model, optim, loss_func, number_of_epochs=100):
 
 
 trained_model, best_accuracy = train(nn_model, optimizer, loss, number_of_epochs=1000)
-mlflow.pytorch.log_model(trained_model, "model", 
-                         code_paths=preprocessing_artifacts_paths)
+mlflow.pytorch.log_model(trained_model, 
+                         code_paths=preprocessing_artifacts_paths,
+                         artifact_path="model")
 mlflow.log_metric("training_loss", best_accuracy)
 
 # Once we complete the training loop, we want to store some of the parameters like the "bag" so that once the bot is built,

@@ -1,6 +1,6 @@
 import torch
 from pathlib import Path
-from model import NeuralNet
+from src.scripts.models.neural_net import NeuralNet
 
 # write func to load model_params using torch.load
 def laod_model_params(path: Path) -> dict:

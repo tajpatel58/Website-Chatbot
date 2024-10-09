@@ -1,9 +1,9 @@
 import os
 import torch
 import random
-from model import NeuralNet
+from scripts.models.neural_net import NeuralNet
 from nltk.stem import PorterStemmer
-from text_cleaning import clean_text, bag_of_words
+from src.scripts.data.text_cleaning import clean_text, bag_of_words
 from ts.torch_handler.base_handler import BaseHandler
 
 
